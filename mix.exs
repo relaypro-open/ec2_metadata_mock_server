@@ -8,7 +8,7 @@ defmodule Ec2Mock.MixProject do
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      releases: [ { :ec2_mock, release() } ]
+      releases: [{:ec2_mock, release()}]
     ]
   end
 
@@ -31,14 +31,14 @@ defmodule Ec2Mock.MixProject do
   end
 
   defp release do
-      [
-          overwrite: true,
-          quiet: false,
-          steps: [:assemble, &Bakeware.assemble/1],
-          bakeware: [
-              compression_level: 1,
-              start_command: "daemon"
-          ]
+    [
+      overwrite: true,
+      quiet: false,
+      steps: [:assemble, &Bakeware.assemble/1],
+      bakeware: [
+        compression_level: 1,
+        start_command: "daemon"
       ]
+    ]
   end
 end

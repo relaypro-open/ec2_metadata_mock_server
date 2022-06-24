@@ -14,6 +14,7 @@ defmodule Ec2Mock.Ec2InstanceMetadata do
         conn
         |> put_resp_content_type("text/plain")
         |> send_resp(404, error404())
+
       _ ->
         conn
         |> put_resp_content_type("text/plain")
@@ -22,12 +23,13 @@ defmodule Ec2Mock.Ec2InstanceMetadata do
   end
 
   def serve_metadata(requestlist) do
-    keys = List.delete(requestlist,<<"latest">>)
-    lookup = :nested.get(keys,metadata(),:not_found)
+    keys = List.delete(requestlist, "latest")
+    lookup = :nested.get(keys, metadata(), :not_found)
 
     case lookup do
       :not_found ->
         :not_found
+
       value ->
         case is_map(value) do
           true ->
