@@ -25,7 +25,8 @@ defmodule Ec2Mock.MixProject do
     [
       {:plug_cowboy, "~> 2.0"},
       {:json, "~> 1.4"},
-      {:bakeware, "~> 0.2.4", runtime: false}
+      {:bakeware, "~> 0.2.4", runtime: false},
+      {:nested, "~> 0.1.2"}
     ]
   end
 

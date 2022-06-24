@@ -2,13 +2,11 @@ defmodule Ec2Mock.Ec2InstanceMetadata do
   import Plug.Conn
 
   def init(options) do
-    # initialize options
     options
   end
 
   def call(conn, _opts) do
     request_list = String.split(conn.request_path, "/", trim: true)
-    IO.inspect(request_list)
     lookup = serve_metadata(request_list)
 
     case lookup do
@@ -16,7 +14,6 @@ defmodule Ec2Mock.Ec2InstanceMetadata do
         conn
         |> put_resp_content_type("text/plain")
         |> send_resp(404, error404())
-
       _ ->
         conn
         |> put_resp_content_type("text/plain")
@@ -24,42 +21,13 @@ defmodule Ec2Mock.Ec2InstanceMetadata do
     end
   end
 
-  def lookup([], value) do
-    value
-  end
-
-  def lookup([head | tail], map) do
-    case Map.get(map, head, :not_found) do
-      :not_found ->
-        key = "#{head}/"
-
-        case Map.get(map, key, :not_found) do
-          :not_found ->
-            :not_found
-
-          value ->
-            case is_map(value) do
-              true ->
-                lookup(tail, value)
-
-              false ->
-                :not_found
-            end
-        end
-
-      value ->
-        lookup(tail, value)
-    end
-  end
-
   def serve_metadata(requestlist) do
-    keys = :lists.delete(<<"latest">>, requestlist)
-    lookup = lookup(keys, metadata())
+    keys = List.delete(requestlist,<<"latest">>)
+    lookup = :nested.get(keys,metadata(),:not_found)
 
     case lookup do
       :not_found ->
         :not_found
-
       value ->
         case is_map(value) do
           true ->
